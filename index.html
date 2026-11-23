@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WORD4ALL – darmowa nauka angielskiego dla klas 0–8</title>
+  <meta name="description" content="WORD4ALL to w pełni darmowa aplikacja do nauki angielskich słówek i gramatyki dla uczniów od zerówki do klasy 8. Sowa Rychu, nagrody, gry i odznaki. Bez kont i bez opłat.">
+  <meta name="theme-color" content="#24306b">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WORD4ALL – darmowa nauka angielskiego dla klas 0–8">
+  <meta property="og:description" content="Słówka, gramatyka, nagrody i gry z sową Rychem. W pełni za darmo, bez konta.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%89%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Lexend:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Szkolny zeszyt w kratkę: granatowy atrament, czerwony długopis nauczyciela, żółty zakreślacz. */
+    :root {
+      --paper: #fbfcf7;
+      --grid: #dfe8f1;
+      --margin: #f2a5a0;
+      --ink: #24306b;
+      --ink-soft: #55608f;
+      --red: #d8382f;
+      --marker: #ffe169;
+      --owl: #8a5a2b;
+      --white: #ffffff;
+      --head: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+      --body: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --hand: "Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+      --cell: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: var(--cell) var(--cell);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    h1, h2, h3 { font-family: var(--head); line-height: 1.05; margin: 0; font-weight: 800; letter-spacing: -.01em; }
+    h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); }
+    h2 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin-bottom: 10px; }
+    h3 { font-size: 1.3rem; font-weight: 700; }
+    p { margin: 0 0 12px; }
+    .wrap { width: min(1100px, 92%); margin: 0 auto; }
+    .muted { color: var(--ink-soft); }
+    .hand { font-family: var(--hand); font-weight: 700; color: var(--red); }
+    mark { background: linear-gradient(transparent 35%, var(--marker) 35%, var(--marker) 88%, transparent 88%); color: inherit; padding: 0 .08em; }
+    :focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: 6px; }
+
+    /* Przyciski: jak przyklejone karteczki z twardym cieniem */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; font-family: var(--head); font-weight: 700; font-size: 1.15rem;
+      padding: 12px 24px 10px; border-radius: 14px; text-decoration: none; cursor: pointer;
+      border: 2.5px solid var(--ink); background: var(--white); color: var(--ink);
+      box-shadow: 4px 4px 0 var(--ink); transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+    .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+    .btn.go { background: var(--marker); }
+    .btn.small { font-size: 1rem; padding: 8px 16px 6px; box-shadow: 3px 3px 0 var(--ink); }
+
+    /* Nagłówek */
+    .top { position: sticky; top: 0; z-index: 10; background: rgba(251, 252, 247, .92); backdrop-filter: blur(6px); border-bottom: 2.5px solid var(--ink); }
+    .top .wrap { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+    .brand { font-family: var(--head); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+
+    /* Odstępy między sekcjami: jedna, zwarta skala */
+    .sec { padding: 56px 0; }
+    .sec + .sec { padding-top: 0; }
+    .sec-head { max-width: 640px; margin-bottom: 24px; }
+
+    /* Hero */
+    .hero { padding: 48px 0 56px; }
+    .hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 32px; align-items: center; }
+    .hero .lead { font-size: 1.2rem; max-width: 33em; margin: 18px 0 24px; }
+    .hero .cta { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .hero .facts { margin-top: 22px; font-size: .98rem; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 6px 18px; }
+    .hero .facts span::before { content: "✓ "; color: var(--red); font-weight: 700; }
+    .owl-card { position: relative; justify-self: center; width: min(380px, 100%); }
+    .owl-card .sheet {
+      background: var(--white); border: 2.5px solid var(--ink); border-radius: 22px; box-shadow: 8px 8px 0 var(--ink);
+      padding: 26px 22px 18px; transform: rotate(-2deg);
+    }
+    .owl-card svg { width: 72%; margin: 0 auto; display: block; }
+    .owl-card .speech { font-family: var(--hand); font-size: 1.7rem; text-align: center; margin: 6px 0 0; line-height: 1.1; }
+    .grade-stamp {
+      position: absolute; top: -18px; right: -12px; width: 92px; height: 92px; border: 3px solid var(--red); border-radius: 50%;
+      display: grid; place-items: center; color: var(--red); font-family: var(--hand); font-size: 3.4rem; line-height: 1;
+      transform: rotate(12deg); background: rgba(255, 255, 255, .8);
+    }
+    .grade-stamp small { position: absolute; bottom: 12px; font-size: 1rem; }
+
+    /* Pasek „za darmo” */
+    .free {
+      background: var(--ink); color: var(--paper); border-radius: 22px; padding: 30px clamp(22px, 4vw, 44px);
+      display: grid; grid-template-columns: auto 1fr; gap: 12px 36px; align-items: center;
+    }
+    .free .price { font-family: var(--head); font-weight: 800; font-size: clamp(4rem, 10vw, 6.4rem); line-height: .9; color: var(--marker); }
+    .free .price small { display: block; font-size: 1.05rem; font-weight: 600; color: #c9cff0; line-height: 1.3; margin-top: 6px; }
+    .free h2 { color: var(--white); }
+    .free p { color: #dfe3fa; margin: 0; }
+    .numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 22px; grid-column: 1 / -1; border-top: 1px solid rgba(255, 255, 255, .2); padding-top: 18px; }
+    .numbers div { font-size: .95rem; color: #c9cff0; }
+    .numbers b { display: block; font-family: var(--head); font-size: 2rem; color: var(--white); line-height: 1.1; }
+
+    /* Funkcje: strona zeszytu z marginesem */
+    .page {
+      background: var(--white); border: 2.5px solid var(--ink); border-radius: 22px; position: relative; overflow: hidden;
+      padding: 22px 28px 20px;
+    }
+    .page::before { content: ""; position: absolute; top: 0; bottom: 0; left: 18px; border-left: 2px solid var(--margin); }
+    .features { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 44px; }
+    .features li { position: relative; padding: 14px 0 14px 54px; border-bottom: 1px dashed var(--grid); }
+    .features li:nth-last-child(-n+2) { border-bottom: 0; }
+    .features .ico { position: absolute; left: 4px; top: 12px; width: 40px; text-align: center; font-size: 1.6rem; }
+    .features h3 { margin-bottom: 2px; }
+    .features p { margin: 0; color: var(--ink-soft); font-size: .97rem; }
+    .lab { margin: 16px 0 0; padding-top: 14px; border-top: 2px solid var(--grid); font-size: .95rem; color: var(--ink-soft); }
+    .lab .hand { font-size: 1.35rem; margin-right: 6px; }
+
+    /* Ćwiczenia: plan według klas */
+    .ladder { display: grid; gap: 10px; }
+    .rung { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: center; }
+    .rung .lvl { font-family: var(--head); font-weight: 700; font-size: 1.1rem; text-align: right; }
+    .rung .lvl small { display: block; font-family: var(--body); font-weight: 400; font-size: .8rem; color: var(--ink-soft); }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { background: var(--white); border: 2px solid var(--ink); border-radius: 999px; padding: 6px 14px 5px; font-weight: 500; font-size: .95rem; }
+
+    /* Jak to działa: prawdziwa sekwencja, więc numery */
+    .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: s; }
+    .steps li { counter-increment: s; background: var(--white); border: 2.5px solid var(--ink); border-radius: 18px; padding: 18px 18px 14px; position: relative; }
+    .steps li::before { content: counter(s); font-family: var(--hand); font-size: 2.6rem; color: var(--red); line-height: .8; display: block; margin-bottom: 6px; }
+    .steps p { margin: 4px 0 0; color: var(--ink-soft); font-size: .95rem; }
+
+    /* Rodzice */
+    .parents { display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: start; }
+    .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .checks li { padding-left: 34px; position: relative; }
+    .checks li::before { content: "✓"; position: absolute; left: 0; top: -4px; font-family: var(--hand); font-size: 1.8rem; color: var(--red); }
+    .install { background: var(--marker); border: 2.5px solid var(--ink); border-radius: 18px; padding: 22px; transform: rotate(1.5deg); box-shadow: 5px 5px 0 var(--ink); }
+    .install h3 { margin-bottom: 8px; }
+    .install p { font-size: .97rem; }
+
+    /* FAQ */
+    .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+    details { background: var(--white); border: 2px solid var(--ink); border-radius: 14px; padding: 0 18px; }
+    summary { cursor: pointer; list-style: none; font-weight: 600; padding: 14px 0; display: flex; justify-content: space-between; gap: 12px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-family: var(--head); font-size: 1.5rem; line-height: 1; color: var(--red); }
+    details[open] summary::after { content: "–"; }
+    details p { color: var(--ink-soft); font-size: .96rem; }
+
+    /* Od autora + kontakt */
+    .author-row { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; align-items: stretch; }
+    .letter {
+      background: var(--white); border: 2.5px solid var(--ink); border-radius: 22px; padding: 26px 28px;
+      background-image: linear-gradient(transparent 31px, var(--grid) 32px); background-size: 100% 32px; background-position: 0 14px;
+    }
+    .letter h2 { margin-bottom: 8px; }
+    .letter p { font-family: var(--hand); font-size: 1.75rem; line-height: 32px; margin: 0; color: var(--ink); }
+    .letter .sign { text-align: right; margin-top: 8px; color: var(--red); }
+    .contact { background: var(--ink); color: var(--paper); border-radius: 22px; padding: 26px 28px; display: flex; flex-direction: column; justify-content: center; }
+    .contact h2 { color: var(--white); font-size: clamp(1.6rem, 3vw, 2.1rem); }
+    .contact p { color: #dfe3fa; }
+    .contact .btn { align-self: flex-start; margin-top: 4px; }
+    [hidden] { display: none !important; }
+    .contact-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 4px; }
+    .contact-form label { font-weight: 600; color: var(--white); }
+    .contact-form input[type="text"] { width: 80px; padding: 10px 12px; border: 2.5px solid var(--paper); border-radius: 12px; font: inherit; font-size: 1.1rem; text-align: center; background: var(--white); color: var(--ink); }
+    .hp { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; opacity: 0; }
+    .contact-msg { color: #ffb3ad; font-weight: 500; min-height: 0; margin: 8px 0 0; }
+    .contact-msg:empty { display: none; }
+    .contact-out { margin: 6px 0 0; font-family: var(--head); font-size: 1.4rem; font-weight: 700; word-break: break-all; }
+    .contact-out:empty { display: none; }
+    .contact-out a { color: var(--marker); }
+    .contact-note { font-size: .82rem; color: #aeb5dd !important; margin: 14px 0 0; }
+
+    /* Zakończenie */
+    .final { text-align: center; padding: 40px 0 28px; }
+    .final h2 { margin-bottom: 14px; }
+    footer { border-top: 2.5px solid var(--ink); background: var(--paper); padding: 18px 0; font-size: .92rem; color: var(--ink-soft); }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+    @media (max-width: 900px) {
+      .hero .wrap, .parents, .author-row, .faq { grid-template-columns: 1fr; }
+      .owl-card { width: min(300px, 80%); }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .features { grid-template-columns: 1fr; }
+      .features li:nth-last-child(2) { border-bottom: 1px dashed var(--grid); }
+      .numbers { grid-template-columns: 1fr 1fr; gap: 14px; }
+    }
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .sec { padding: 40px 0; }
+      .hero { padding: 28px 0 40px; }
+      .free { grid-template-columns: 1fr; }
+      .page { padding: 14px 16px 14px 22px; }
+      .page::before { left: 10px; }
+      .features li { padding-left: 46px; }
+      .features .ico { left: 0; width: 36px; font-size: 1.4rem; }
+      .rung { grid-template-columns: 1fr; gap: 6px; }
+      .rung .lvl { text-align: left; }
+      .rung .lvl small { display: inline; margin-left: 6px; }
+      .steps { grid-template-columns: 1fr; }
+      .top .btn { display: none; }
+      .install { transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="WORD4ALL – na górę strony"><span aria-hidden="true">🦉</span>WORD4ALL</a>
+    <a class="btn small go app-link" href="#">Otwórz aplikację</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Angielski, który dzieci <mark>chcą</mark> ćwiczyć</h1>
+        <p class="lead">Darmowa aplikacja do nauki słówek i gramatyki od zerówki do klasy 8. Uczy sowa Rychu, a za postępy są klejnoty, odznaki i gierki.</p>
+        <div class="cta">
+          <a class="btn go app-link" href="#">Zacznij naukę za darmo</a>
+          <a href="#funkcje" class="muted">Co jest w środku?</a>
+        </div>
+        <div class="facts"><span>bez opłat</span><span>bez konta</span><span>działa na telefonie</span></div>
+      </div>
+      <div class="owl-card" aria-hidden="true">
+        <div class="sheet">
+          <svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="38" cy="128" rx="16" ry="44" fill="#6e4520" transform="rotate(14 38 128)"/>
+            <ellipse cx="162" cy="128" rx="16" ry="44" fill="#6e4520" transform="rotate(-14 162 128)"/>
+            <ellipse cx="100" cy="123" rx="66" ry="78" fill="#8a5a2b" stroke="#24306b" stroke-width="4"/>
+            <ellipse cx="100" cy="148" rx="42" ry="50" fill="#f6dfb8"/>
+            <path d="M72 144q9 7 18 0M96 156q9 7 18 0M82 168q9 7 18 0" stroke="#d6ad73" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M44 60 52 28l24 22zM156 60l-8-32-24 22z" fill="#8a5a2b" stroke="#24306b" stroke-width="4" stroke-linejoin="round"/>
+            <circle cx="72" cy="84" r="26" fill="#fff" stroke="#24306b" stroke-width="4"/>
+            <circle cx="128" cy="84" r="26" fill="#fff" stroke="#24306b" stroke-width="4"/>
+            <circle cx="76" cy="86" r="12" fill="#24306b"/>
+            <circle cx="124" cy="86" r="12" fill="#24306b"/>
+            <circle cx="80" cy="81" r="4" fill="#fff"/>
+            <circle cx="128" cy="81" r="4" fill="#fff"/>
+            <path d="M100 96 88 112h24z" fill="#f5a524" stroke="#24306b" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M82 192l-10 12h26zM118 192l-10 12h26z" fill="#f5a524" stroke="#24306b" stroke-width="3" stroke-linejoin="round"/>
+          </svg>
+          <p class="speech">Cześć! Jestem Rychu.<br>Poćwiczymy?</p>
+        </div>
+        <div class="grade-stamp">6<small>brawo!</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="free">
+        <div class="price">0 zł<small>na zawsze</small></div>
+        <div>
+          <h2>Darmowa, a ma więcej niż niejedna płatna</h2>
+          <p>Bez abonamentu, okresu próbnego i ukrytych opłat. Wszystkie ćwiczenia, lekcje, nagrody i gry są odblokowane od pierwszego dnia. Dobrowolne wsparcie autora jest skierowane do rodziców, nigdy do dzieci.</p>
+        </div>
+        <div class="numbers">
+          <div><b>12</b>rodzajów ćwiczeń</div>
+          <div><b>~70</b>lekcji gramatyki</div>
+          <div><b>16</b>gier do zdobycia</div>
+          <div><b>0–8</b>od zerówki do 8. klasy</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="funkcje">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Co jest w środku</h2>
+        <p class="muted">Krótkie ćwiczenia, jasne lekcje i nagrody, które zachęcają do nauki każdego dnia.</p>
+      </div>
+      <div class="page">
+        <ul class="features">
+          <li><span class="ico">🎯</span><h3>Zadanie dnia</h3><p>Trzy krótkie ćwiczenia dziennie. Za każde są klejnoty, a za całość premia, większa za kolejne dni z rzędu.</p></li>
+          <li><span class="ico">🎓</span><h3>Ścieżka nauki</h3><p>Ok. 70 lekcji gramatyki od „Hello!” po Present Perfect. Najpierw karta z wyjaśnieniem, potem ćwiczenia.</p></li>
+          <li><span class="ico">🎁</span><h3>Nagrody i gierki</h3><p>Klejnoty wymienia się na dowcipy, zagadki i 16 łagodnych gier, w których nikt nie ponosi szkody.</p></li>
+          <li><span class="ico">🦉</span><h3>Sowa Rychu</h3><p>Osobisty trener, który wita, chwali i pociesza, a na start pokazuje wszystko w samouczku.</p></li>
+          <li><span class="ico">🏆</span><h3>Odznaki i poziomy</h3><p>Dziesiątki drobnych celów, żeby zawsze była kolejna odznaka w zasięgu ręki.</p></li>
+          <li><span class="ico">📊</span><h3>Wyniki</h3><p>Wykresy aktywności, kalendarz nauki, oceny i słówka do powtórki.</p></li>
+          <li><span class="ico">⭐</span><h3>Własne słowa</h3><p>Wklej słówka z kartkówki, a aplikacja podpowie tłumaczenia.</p></li>
+          <li><span class="ico">🎨</span><h3>Motywy i tryb cichy</h3><p>Sześć motywów, w tym ciemny i dla niedowidzących, oraz nauka bez dźwięku.</p></li>
+        </ul>
+        <p class="lab"><span class="hand">W przygotowaniu:</span>w aplikacji są też funkcje eksperymentalne. To pomysły, które być może kiedyś znajdą się w finalnej wersji.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Ćwiczenia rosną razem z dzieckiem</h2>
+        <p class="muted">Najmłodsi uczą się z obrazków i dźwięku, starsi piszą, układają zdania i odmieniają czasowniki.</p>
+      </div>
+      <div class="ladder">
+        <div class="rung"><div class="lvl">Zerówka<small>5–6 lat</small></div><div class="tags"><span class="tag">👂 Wskaż obrazek</span><span class="tag">🧠 Memory</span><span class="tag">🎴 Fiszki</span></div></div>
+        <div class="rung"><div class="lvl">Klasa 1<small>7 lat</small></div><div class="tags"><span class="tag">🖼️ Obrazki</span><span class="tag">🔗 Łączenie par</span><span class="tag">🔤 Układanka z liter</span></div></div>
+        <div class="rung"><div class="lvl">Klasa 2<small>8 lat</small></div><div class="tags"><span class="tag">✅ Test wyboru</span><span class="tag">🔡 Brakujące litery</span></div></div>
+        <div class="rung"><div class="lvl">Klasa 3<small>9 lat</small></div><div class="tags"><span class="tag">⌨️ Wpisywanie</span><span class="tag">🧩 Układanie zdań</span><span class="tag">🎧 Dyktando</span></div></div>
+        <div class="rung"><div class="lvl">Klasa 5<small>11 lat</small></div><div class="tags"><span class="tag">⏪ Czasowniki nieregularne</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><h2>Jak zacząć</h2></div>
+      <ol class="steps">
+        <li><h3>Wybierz klasę</h3><p>Wpisz imię i wskaż klasę. Aplikacja dobierze słówka, ćwiczenia i lekcje.</p></li>
+        <li><h3>Zrób zadanie dnia</h3><p>Trzy krótkie ćwiczenia zajmują kilka minut.</p></li>
+        <li><h3>Zbieraj nagrody</h3><p>Klejnoty, skrzynie skarbów, punkty i odznaki za postępy.</p></li>
+        <li><h3>Zagraj w gierkę</h3><p>Wymień klejnoty na gry, dowcipy i zagadki.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap parents">
+      <div>
+        <h2>Dla rodziców i nauczycieli</h2>
+        <ul class="checks">
+          <li><b>Słownictwo według podstawy programowej</b>, osobno dla każdej klasy.</li>
+          <li><b>Bez konta i logowania.</b> Postępy zostają na urządzeniu dziecka i nie są wysyłane na serwer.</li>
+          <li><b>Własne dowcipy i zagadki</b> dobrane do wieku, bez treści z internetu.</li>
+          <li><b>Łagodne gry.</b> Muchy odpływają w bańkach, a żabka po prostu wraca na start.</li>
+          <li><b>Tryb cichy i motyw dla niedowidzących</b> ułatwiają naukę w szkole i w podróży.</li>
+        </ul>
+      </div>
+      <div class="install">
+        <h3>Zainstaluj jak aplikację</h3>
+        <p>Otwórz WORD4ALL w przeglądarce telefonu i dodaj do ekranu głównego. Uruchomi się na pełnym ekranie, jak zwykła aplikacja.</p>
+        <a class="btn small app-link" href="#">Otwórz aplikację</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><h2>Pytania i odpowiedzi</h2></div>
+      <div class="faq">
+        <details><summary>Czy WORD4ALL naprawdę jest darmowy?</summary><p>Tak. Cała aplikacja jest bezpłatna, bez abonamentu i okresu próbnego. Dobrowolne wsparcie autora jest skierowane do rodziców i można je ukryć.</p></details>
+        <details><summary>Dla jakiego wieku jest aplikacja?</summary><p>Dla uczniów od zerówki (5–6 lat) do klasy 8. Po wyborze klasy aplikacja dobiera słówka, ćwiczenia i lekcje.</p></details>
+        <details><summary>Czy trzeba zakładać konto?</summary><p>Nie. Wystarczy wpisać imię i wybrać klasę. Postępy zapisują się w przeglądarce na urządzeniu dziecka.</p></details>
+        <details><summary>Czy postęp przeniesie się na inny telefon?</summary><p>Nie. Dane są zapisane tylko na urządzeniu, na którym uczy się dziecko, więc zmiana telefonu lub przeglądarki oznacza start od zera.</p></details>
+        <details><summary>Czy działa bez internetu?</summary><p>Po pierwszym wejściu aplikacja zwykle uruchomi się także offline. Internet jest potrzebny tylko do tłumaczenia własnych słów.</p></details>
+        <details><summary>Czy mogę dodać własne słówka?</summary><p>Tak. Wklej listę słów, a aplikacja podpowie tłumaczenia. Ćwiczysz je potem w zbiorze „Dodane słowa”.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="kontakt">
+    <div class="wrap author-row">
+      <div class="letter">
+        <h2>Od autora</h2>
+        <p>Ta aplikacja powstała dla mojego dziecka. Tworzyłem ją razem z nim, a ono namówiło mnie, żebym opublikował ją w sieci. Korzystaj, podziel się z innymi. 😊👌</p>
+        <p class="sign">autor WORD4ALL</p>
+      </div>
+      <div class="contact" id="kontakt-box">
+        <h2>Masz pytanie lub pomysł?</h2>
+        <p>Napisz do mnie. Odpowiem, gdy tylko znajdę chwilę.</p>
+        <button type="button" class="btn go small" id="kontakt-open">Pokaż adres e-mail</button>
+        <div id="kontakt-form" class="contact-form" role="group" aria-labelledby="kontakt-q" hidden>
+          <label for="kontakt-ans" id="kontakt-q">Ile to 2 + 2?</label>
+          <input id="kontakt-ans" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" required>
+          <input type="checkbox" id="kontakt-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="button" class="btn go small" id="kontakt-go">Pokaż</button>
+        </div>
+        <p id="kontakt-msg" class="contact-msg" role="status" aria-live="polite"></p>
+        <p id="kontakt-out" class="contact-out"></p>
+        <noscript><p class="contact-msg">Aby zobaczyć adres e-mail, włącz JavaScript w przeglądarce.</p></noscript>
+        <p class="contact-note">Krótkie pytanie chroni adres przed robotami spamerów.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Zacznij dziś. To nic nie kosztuje.</h2>
+      <a class="btn go app-link" href="#">Otwórz WORD4ALL</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>WORD4ALL, darmowa nauka angielskiego dla klas 0–8</span><a href="#kontakt">Kontakt</a></div>
+</footer>
+
+<script>
+  // Wpisz tutaj adres, pod którym działa aplikacja. Zmieni wszystkie przyciski "Otwórz aplikację".
+  const APP_URL = "https://nalatomojpies-maker.github.io/wordol/";
+  document.querySelectorAll(".app-link").forEach(function (link) { link.href = APP_URL; });
+
+  // Kontakt: adres nie występuje w kodzie HTML ani w czytelnej postaci w skrypcie.
+  // Składa się dopiero po kliknięciu i poprawnej odpowiedzi na pytanie (z pułapką dla botów i opóźnieniem).
+  (function () {
+    var started = Date.now();
+    var enc = "bW9jLmxpYW1nQHNlaXBqb21vdGFsYW4=";
+    var openBtn = document.getElementById("kontakt-open");
+    var form = document.getElementById("kontakt-form");
+    var question = document.getElementById("kontakt-q");
+    var answer = document.getElementById("kontakt-ans");
+    var trap = document.getElementById("kontakt-hp");
+    var msg = document.getElementById("kontakt-msg");
+    var out = document.getElementById("kontakt-out");
+    if (!openBtn || !form) return;
+    var sum = 0;
+
+    function newQuestion() {
+      var a = 2 + Math.floor(Math.random() * 7);
+      var b = 2 + Math.floor(Math.random() * 7);
+      sum = a + b;
+      question.textContent = "Ile to " + a + " + " + b + "?";
+      answer.value = "";
+    }
+    function decode() { return atob(enc).split("").reverse().join(""); }
+
+    openBtn.addEventListener("click", function () {
+      openBtn.hidden = true;
+      form.hidden = false;
+      newQuestion();
+      answer.focus();
+    });
+    function submit() {
+      var tooFast = Date.now() - started < 1500;
+      if (trap.checked || tooFast) {
+        msg.textContent = "Coś poszło nie tak. Odśwież stronę i spróbuj jeszcze raz.";
+        return;
+      }
+      if (parseInt(String(answer.value).trim(), 10) !== sum) {
+        msg.textContent = "Niepoprawna odpowiedź. Spróbuj jeszcze raz.";
+        newQuestion();
+        return;
+      }
+      var address = decode();
+      var link = document.createElement("a");
+      link.href = "mailto:" + address;
+      link.textContent = address;
+      out.textContent = "";
+      out.appendChild(link);
+      form.hidden = true;
+      msg.textContent = "";
+    }
+    // Bez elementu <form>, żeby działało też w podglądach, które blokują wysyłanie formularzy.
+    document.getElementById("kontakt-go").addEventListener("click", submit);
+    answer.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") { event.preventDefault(); submit(); }
+    });
+  })();
+</script>
+</body>
+</html>
